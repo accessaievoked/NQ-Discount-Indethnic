@@ -96,7 +96,7 @@ export default function OfferDetail() {
 
   return (
     <s-page heading={offer.title || "Offer"}>
-      <s-link slot="primary-action" href="/app/offers">
+      <s-link slot="primary-action" href="/app">
         Back to offers
       </s-link>
 
