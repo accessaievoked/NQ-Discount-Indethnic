@@ -222,7 +222,7 @@ async function attachOfferToOneProduct(admin, productId, metaobjectId) {
   if (currentIds.includes(metaobjectId)) return; // already linked, nothing to do
   currentIds.push(metaobjectId);
 
-  await admin.graphql(
+  const writeResponse = await admin.graphql(
     `mutation setOffers($metafields: [MetafieldsSetInput!]!) {
       metafieldsSet(metafields: $metafields) {
         metafields { id }
@@ -243,6 +243,13 @@ async function attachOfferToOneProduct(admin, productId, metaobjectId) {
       },
     }
   );
+  const writeJson = await writeResponse.json();
+  const errors = writeJson.data?.metafieldsSet?.userErrors;
+  if (errors?.length) {
+    throw new Error(
+      `metafieldsSet failed for product ${productId}: ${JSON.stringify(errors)}`
+    );
+  }
 }
 
 async function attachOfferToProducts(admin, productIds, metaobjectId) {
@@ -280,7 +287,7 @@ async function removeOfferFromOneProduct(admin, productId, metaobjectId) {
   const filtered = currentIds.filter((id) => id !== metaobjectId);
   if (filtered.length === currentIds.length) return; // wasn't linked, nothing to change
 
-  await admin.graphql(
+  const writeResponse = await admin.graphql(
     `mutation setOffers($metafields: [MetafieldsSetInput!]!) {
       metafieldsSet(metafields: $metafields) {
         metafields { id }
@@ -301,6 +308,13 @@ async function removeOfferFromOneProduct(admin, productId, metaobjectId) {
       },
     }
   );
+  const writeJson = await writeResponse.json();
+  const errors = writeJson.data?.metafieldsSet?.userErrors;
+  if (errors?.length) {
+    throw new Error(
+      `metafieldsSet failed for product ${productId}: ${JSON.stringify(errors)}`
+    );
+  }
 }
 
 // ---------------------------------------------------------------------------
