@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router";
 import { useLoaderData } from "react-router";
 import { boundary } from "@shopify/shopify-app-react-router/server";
 import { authenticate } from "../shopify.server";
@@ -90,109 +91,263 @@ function formatDate(value) {
 
 export default function OfferDetail() {
   const { offer, products, shopHandle } = useLoaderData();
+  const navigate = useNavigate();
 
   const discountNumericId = offer.discountGid.split("/").pop();
   const discountAdminUrl = `https://admin.shopify.com/store/${shopHandle}/discounts/${discountNumericId}`;
 
   return (
     <s-page heading={offer.title || "Offer"}>
-      <s-link slot="primary-action" href="/app">
-        Back to offers
-      </s-link>
+      <style>{`
+        .offer-detail-back {
+          background: none;
+          border: none;
+          padding: 0;
+          margin-bottom: 1rem;
+          font-size: .8125rem;
+          font-weight: 600;
+          color: #2c6ecb;
+          cursor: pointer;
+        }
+        .offer-detail-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 1rem;
+          margin-bottom: 1.25rem;
+          flex-wrap: wrap;
+        }
+        .offer-detail-title {
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: #1a1a1a;
+          margin: 0;
+        }
+        .offer-detail-subtitle {
+          margin-top: .375rem;
+          display: flex;
+          align-items: center;
+          gap: .5rem;
+        }
+        .offers-dash-badge {
+          display: inline-block;
+          padding: .1875rem .5rem;
+          border-radius: 999px;
+          font-size: .6875rem;
+          font-weight: 600;
+          white-space: nowrap;
+        }
+        .offers-dash-badge.is-automatic {
+          background: #e3f5e9;
+          color: #1e7a43;
+        }
+        .offers-dash-badge.is-code {
+          background: #e5f0ff;
+          color: #1655b3;
+        }
+        .offer-detail-code {
+          font-size: .8125rem;
+          color: #6b6b6b;
+        }
+        .offers-dash-card {
+          background: #fff;
+          border: 1px solid #e3e3e3;
+          border-radius: 10px;
+          padding: 1.25rem 1.5rem;
+          margin-bottom: 1rem;
+        }
+        .offer-detail-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+          gap: 1.25rem;
+        }
+        .offer-detail-field-label {
+          font-size: .6875rem;
+          letter-spacing: .04em;
+          text-transform: uppercase;
+          color: #8a8a8a;
+          font-weight: 700;
+          margin-bottom: .25rem;
+        }
+        .offer-detail-field-value {
+          font-size: .875rem;
+          color: #1a1a1a;
+        }
+        .offer-detail-description {
+          margin-top: 1.25rem;
+        }
+        .offer-detail-link-row {
+          margin-top: 1.25rem;
+        }
+        .offer-detail-link-row a {
+          font-size: .8125rem;
+          font-weight: 600;
+          color: #2c6ecb;
+          text-decoration: none;
+        }
+        .offers-dash-table {
+          width: 100%;
+          border-collapse: collapse;
+          font-size: .8125rem;
+        }
+        .offers-dash-table thead th {
+          text-align: left;
+          font-size: .6875rem;
+          letter-spacing: .04em;
+          text-transform: uppercase;
+          color: #8a8a8a;
+          font-weight: 700;
+          padding: .625rem .75rem;
+          background: #fafafa;
+          border-bottom: 1px solid #e3e3e3;
+        }
+        .offers-dash-table tbody td {
+          padding: .75rem;
+          border-bottom: 1px solid #efefef;
+          color: #1a1a1a;
+          vertical-align: middle;
+        }
+        .offers-dash-row-index {
+          color: #8a8a8a;
+        }
+        .offers-dash-title-link {
+          color: #2c6ecb;
+          font-weight: 600;
+          text-decoration: none;
+        }
+        .offers-dash-empty {
+          padding: 2rem;
+          text-align: center;
+          color: #8a8a8a;
+          font-size: .875rem;
+        }
+        .offer-detail-section-title {
+          font-size: .875rem;
+          font-weight: 700;
+          color: #1a1a1a;
+          margin: 0 0 1rem;
+        }
+      `}</style>
 
-      <s-section heading="Offer details">
-        <s-stack direction="block" gap="base">
-          <s-paragraph>
-            <s-text>Type: </s-text>
-            <s-badge tone={offer.type === "Discount code" ? "info" : "success"}>
-              {offer.type}
-            </s-badge>
-          </s-paragraph>
-
-          {offer.code && (
-            <s-paragraph>
-              <s-text>Code: </s-text>
-              {offer.code}
-            </s-paragraph>
-          )}
-
-          {offer.usageLimit && (
-            <s-paragraph>
-              <s-text>Usage limit: </s-text>
-              {offer.usageLimit}
-            </s-paragraph>
-          )}
-
-          <s-paragraph>
-            <s-text>Starts: </s-text>
-            {formatDate(offer.startsAt)}
-          </s-paragraph>
-
-          <s-paragraph>
-            <s-text>Ends: </s-text>
-            {offer.endsAt ? formatDate(offer.endsAt) : "No end date"}
-          </s-paragraph>
-
-          {offer.description && (
-            <s-paragraph>
-              <s-text>Description: </s-text>
-              {offer.description}
-            </s-paragraph>
-          )}
-
-          <s-paragraph>
-            <s-link href={discountAdminUrl} target="_blank">
-              View discount in Shopify admin
-            </s-link>
-          </s-paragraph>
-        </s-stack>
-      </s-section>
-
-      <s-section
-        padding="none"
-        heading={`Products (${products.length})`}
+      <button
+        type="button"
+        className="offer-detail-back"
+        onClick={() => navigate("/app")}
       >
+        ← Back to offers
+      </button>
+
+      <div className="offer-detail-header">
+        <div>
+          <p className="offer-detail-title">{offer.title || "Offer"}</p>
+          <div className="offer-detail-subtitle">
+            <span
+              className={`offers-dash-badge ${
+                offer.type === "Discount code" ? "is-code" : "is-automatic"
+              }`}
+            >
+              {offer.type}
+            </span>
+            {offer.code && (
+              <span className="offer-detail-code">Code: {offer.code}</span>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="offers-dash-card">
+        <div className="offer-detail-grid">
+          {offer.usageLimit && (
+            <div>
+              <div className="offer-detail-field-label">Usage limit</div>
+              <div className="offer-detail-field-value">{offer.usageLimit}</div>
+            </div>
+          )}
+          <div>
+            <div className="offer-detail-field-label">Starts</div>
+            <div className="offer-detail-field-value">
+              {formatDate(offer.startsAt)}
+            </div>
+          </div>
+          <div>
+            <div className="offer-detail-field-label">Ends</div>
+            <div className="offer-detail-field-value">
+              {offer.endsAt ? formatDate(offer.endsAt) : "No end date"}
+            </div>
+          </div>
+          <div>
+            <div className="offer-detail-field-label">Applies to</div>
+            <div className="offer-detail-field-value">
+              {products.length} product{products.length === 1 ? "" : "s"}
+            </div>
+          </div>
+        </div>
+
+        {offer.description && (
+          <div className="offer-detail-description">
+            <div className="offer-detail-field-label">Description</div>
+            <div className="offer-detail-field-value">{offer.description}</div>
+          </div>
+        )}
+
+        <div className="offer-detail-link-row">
+          <a href={discountAdminUrl} target="_blank" rel="noreferrer">
+            View discount in Shopify admin →
+          </a>
+        </div>
+      </div>
+
+      <div className="offers-dash-card" style={{ padding: 0, overflow: "hidden" }}>
+        <div style={{ padding: "1.25rem 1.5rem 0" }}>
+          <p className="offer-detail-section-title">
+            Products ({products.length})
+          </p>
+        </div>
         {products.length === 0 ? (
-          <s-paragraph>
+          <div className="offers-dash-empty">
             No products are currently linked to this offer.
-          </s-paragraph>
+          </div>
         ) : (
-          <s-table>
-            <s-table-header-row>
-              <s-table-header listSlot="primary">Product</s-table-header>
-              <s-table-header listSlot="inline">Status</s-table-header>
-            </s-table-header-row>
-            <s-table-body>
-              {products.map((product) => {
+          <table className="offers-dash-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Product</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {products.map((product, i) => {
                 const numericId = product.id.split("/").pop();
                 return (
-                  <s-table-row
-                    key={product.id}
-                    clickDelegate={`product-link-${numericId}`}
-                  >
-                    <s-table-cell>
-                      <s-link
-                        id={`product-link-${numericId}`}
+                  <tr key={product.id}>
+                    <td className="offers-dash-row-index">{i + 1}</td>
+                    <td>
+                      <a
+                        className="offers-dash-title-link"
                         href={`https://admin.shopify.com/store/${shopHandle}/products/${numericId}`}
                         target="_blank"
+                        rel="noreferrer"
                       >
                         {product.title}
-                      </s-link>
-                    </s-table-cell>
-                    <s-table-cell>
-                      <s-badge
-                        tone={product.status === "ACTIVE" ? "success" : "neutral"}
+                      </a>
+                    </td>
+                    <td>
+                      <span
+                        className={`offers-dash-badge ${
+                          product.status === "ACTIVE" ? "is-automatic" : "is-code"
+                        }`}
                       >
                         {product.status}
-                      </s-badge>
-                    </s-table-cell>
-                  </s-table-row>
+                      </span>
+                    </td>
+                  </tr>
                 );
               })}
-            </s-table-body>
-          </s-table>
+            </tbody>
+          </table>
         )}
-      </s-section>
+      </div>
     </s-page>
   );
 }
