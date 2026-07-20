@@ -21,7 +21,7 @@ async function listAllOfferMetaobjects(admin) {
   while (hasNextPage) {
     const response = await admin.graphql(
       `query listOffers($cursor: String) {
-        metaobjects(type: "product_offer", first: 50, after: $cursor) {
+        metaobjects(type: "$app:product_offer", first: 50, after: $cursor) {
           nodes { id fields { key value } }
           pageInfo { hasNextPage endCursor }
         }

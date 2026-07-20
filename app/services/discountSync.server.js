@@ -113,7 +113,7 @@ async function findOfferMetaobjectByDiscountGid(admin, discountGid) {
   while (hasNextPage) {
     const response = await admin.graphql(
       `query findOffer($cursor: String) {
-        metaobjects(type: "product_offer", first: 50, after: $cursor) {
+        metaobjects(type: "$app:product_offer", first: 50, after: $cursor) {
           nodes {
             id
             fields { key value }
@@ -182,7 +182,7 @@ async function upsertOfferMetaobject(admin, data) {
 
   const response = await admin.graphql(
     `mutation createOffer($fields: [MetaobjectFieldInput!]!) {
-      metaobjectCreate(metaobject: { type: "product_offer", fields: $fields }) {
+      metaobjectCreate(metaobject: { type: "$app:product_offer", fields: $fields }) {
         metaobject { id }
         userErrors { field message }
       }

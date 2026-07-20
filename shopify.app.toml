@@ -2,36 +2,53 @@
 
 client_id = "e7282ab5cbade45a5385c90d7f113a63"
 name = "NQ-Discount-Indethnic"
-application_url = "https://example.com"
+application_url = "https://nq-discount-indethnic.vercel.app"
 embedded = true
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
 scopes = "read_discounts,read_products,write_products,read_metaobjects,write_metaobjects"
 
-[product.metafields.app.demo_info]
-type = "single_line_text_field"
-name = "Demo Source Info"
-description = "Tracks products created by the Shopify app template for development"
+[metaobjects.app.product_offer]
+name = "Product Offer"
+description = "Synced discount details attached to products, used to render active offers on the storefront"
 
-  [product.metafields.app.demo_info.access]
+  [metaobjects.app.product_offer.access]
   admin = "merchant_read_write"
 
-[metaobjects.app.example]
-name = "Example"
-description = "An example metaobject definition created by this template"
-
-  [metaobjects.app.example.access]
-  admin = "merchant_read_write"
-
-[metaobjects.app.example.fields.title]
+[metaobjects.app.product_offer.fields.title]
 name = "Title"
 type = "single_line_text_field"
 required = true
 
-[metaobjects.app.example.fields.description]
+[metaobjects.app.product_offer.fields.description]
 name = "Description"
 type = "multi_line_text_field"
+
+[metaobjects.app.product_offer.fields.code]
+name = "Code"
+type = "single_line_text_field"
+
+[metaobjects.app.product_offer.fields.usage_limit]
+name = "Usage Limit"
+type = "single_line_text_field"
+
+[metaobjects.app.product_offer.fields.starts_at]
+name = "Starts At"
+type = "single_line_text_field"
+
+[metaobjects.app.product_offer.fields.ends_at]
+name = "Ends At"
+type = "single_line_text_field"
+
+[metaobjects.app.product_offer.fields.discount_gid]
+name = "Discount GID"
+type = "single_line_text_field"
+required = true
+
+[metaobjects.app.product_offer.fields.linked_product_ids]
+name = "Linked Product IDs"
+type = "json"
 
 [webhooks]
 api_version = "2026-10"
@@ -52,7 +69,7 @@ uri = "/webhooks/discounts"
 
 
 [auth]
-redirect_urls = [ "https://example.com/api/auth" ]
+redirect_urls = [ "https://nq-discount-indethnic.vercel.app/auth/callback" ]
 
 [build]
 automatically_update_urls_on_dev = true
