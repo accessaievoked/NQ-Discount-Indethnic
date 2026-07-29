@@ -33,3 +33,4 @@ Other resources include [ast-grep's official site](https://ast-grep.github.io/) 
 <!-- | Android armv7    | ✓      | ✓      | ✓      | -->
 <!-- | FreeBSD x64      | ✓      | ✓      | ✓      | -->
 "# NQ-Discount-Indethnic" 
+"# NQ-Discount-Covera" 
